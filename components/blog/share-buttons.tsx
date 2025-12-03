@@ -8,6 +8,9 @@ interface ShareButtonsProps {
   slug: string
 }
 
+// Base URL for sharing - use environment variable or fallback
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://magi-portfolio.vercel.app"
+
 // Custom icons for platforms not in lucide
 function WhatsAppIcon({ className }: { className?: string }) {
   return (
@@ -44,15 +47,8 @@ export function ShareButtons({ title, slug }: ShareButtonsProps) {
     setCanNativeShare(typeof navigator !== "undefined" && "share" in navigator)
   }, [])
   
-  // Build URL - use relative path for SSR, full URL after mount
-  const getFullUrl = () => {
-    if (mounted && typeof window !== "undefined") {
-      return `${window.location.origin}/blog/${slug}`
-    }
-    return `/blog/${slug}`
-  }
-
-  const url = getFullUrl()
+  // Always use absolute URL for sharing
+  const url = `${SITE_URL}/blog/${slug}`
   const encodedTitle = encodeURIComponent(title)
   const encodedUrl = encodeURIComponent(url)
 
@@ -67,11 +63,8 @@ export function ShareButtons({ title, slug }: ShareButtonsProps) {
   }
 
   const copyToClipboard = async () => {
-    const fullUrl = typeof window !== "undefined" 
-      ? `${window.location.origin}/blog/${slug}` 
-      : `/blog/${slug}`
     try {
-      await navigator.clipboard.writeText(fullUrl)
+      await navigator.clipboard.writeText(url)
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     } catch (err) {
@@ -81,14 +74,11 @@ export function ShareButtons({ title, slug }: ShareButtonsProps) {
 
   // Native share for mobile
   const handleNativeShare = async () => {
-    const fullUrl = typeof window !== "undefined" 
-      ? `${window.location.origin}/blog/${slug}` 
-      : `/blog/${slug}`
     if (navigator.share) {
       try {
         await navigator.share({
           title: title,
-          url: fullUrl,
+          url: url,
         })
       } catch (err) {
         // User cancelled or error
