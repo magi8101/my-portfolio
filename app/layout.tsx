@@ -13,9 +13,7 @@ const ibmPlexMono = IBM_Plex_Mono({ subsets: ["latin"], weight: ["400", "500"], 
 
 export const metadata: Metadata = {
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL || 
-    process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 
-    "https://magi.dev"
+    process.env.NEXT_PUBLIC_SITE_URL || "https://magi-portfolio.vercel.app"
   ),
   title: {
     default: "Magi Sharma — Developer",
@@ -33,7 +31,7 @@ export const metadata: Metadata = {
     description: "Building compilers, systems, and open-source tools.",
     images: [
       {
-        url: "/api/og?title=Magi%20Sharma&description=Developer",
+        url: "https://magi-portfolio.vercel.app/api/og?title=Magi%20Sharma&description=Developer",
         width: 1200,
         height: 630,
         alt: "Magi Sharma - Developer",
@@ -44,7 +42,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Magi Sharma — Developer",
     description: "Building compilers, systems, and open-source tools.",
-    images: ["/api/og?title=Magi%20Sharma&description=Developer"],
+    images: ["https://magi-portfolio.vercel.app/api/og?title=Magi%20Sharma&description=Developer"],
     creator: "@magi8101",
   },
   robots: {

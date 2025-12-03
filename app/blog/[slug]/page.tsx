@@ -32,7 +32,8 @@ export async function generateMetadata({ params }: Props) {
     }
   }
   
-  const ogImageUrl = post.og_image || `/api/og?title=${encodeURIComponent(post.title)}&description=${encodeURIComponent(post.excerpt || "")}&type=blog`
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://magi-portfolio.vercel.app"
+  const ogImageUrl = post.og_image || `${baseUrl}/api/og?title=${encodeURIComponent(post.title)}&description=${encodeURIComponent(post.excerpt || "")}&type=blog`
   
   return {
     title: `${post.meta_title || post.title} - Magi Sharma`,
