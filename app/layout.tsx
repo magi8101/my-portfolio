@@ -26,6 +26,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
+    url: "https://magi-portfolio.vercel.app",
     siteName: "Magi Sharma",
     title: "Magi Sharma — Developer",
     description: "Building compilers, systems, and open-source tools.",
