@@ -11,7 +11,10 @@ const ibmPlexMono = IBM_Plex_Mono({ subsets: ["latin"], weight: ["400", "500"], 
 export const metadata: Metadata = {
   title: "Magi Sharma — Developer",
   description: "Building compilers, systems, and open-source tools.",
-    generator: 'v0.app'
+  generator: 'my-portfolio',
+  verification: {
+    google: 'pYWswDm6C3bRqSAWn-MJAsSkgwnC01_7mSmJH_RXnBA',
+  },
 }
 
 export default function RootLayout({
