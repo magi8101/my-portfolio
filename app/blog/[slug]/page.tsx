@@ -13,6 +13,7 @@ import { PopularPosts } from "@/components/blog/popular-posts"
 import { ShareButtons } from "@/components/blog/share-buttons"
 import { TableOfContents } from "@/components/blog/table-of-contents"
 import { ReadingTimeLeft } from "@/components/blog/reading-time-left"
+import { GiscusComments } from "@/components/blog/giscus-comments"
 import { ArrowLeft } from "lucide-react"
 
 // Dynamic rendering since we fetch from Supabase
@@ -152,6 +153,8 @@ export default async function BlogPostPage({ params }: Props) {
           </div>
           
           <PopularPosts currentSlug={slug} limit={3} />
+          
+          <GiscusComments slug={slug} />
         </div>
         
         <TableOfContents content={content} />
