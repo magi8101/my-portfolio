@@ -5,6 +5,14 @@ import { format } from "date-fns"
 import { Navigation } from "@/components/navigation"
 import { Footer } from "@/components/footer"
 import { PostContent } from "@/components/blog/post-content"
+import { ViewCounter } from "@/components/blog/view-counter"
+import { LikeButton } from "@/components/blog/like-button"
+import { ReadingProgress } from "@/components/blog/reading-progress"
+import { ActiveReaders } from "@/components/blog/active-readers"
+import { PopularPosts } from "@/components/blog/popular-posts"
+import { ShareButtons } from "@/components/blog/share-buttons"
+import { TableOfContents } from "@/components/blog/table-of-contents"
+import { ReadingTimeLeft } from "@/components/blog/reading-time-left"
 import { ArrowLeft } from "lucide-react"
 
 // Dynamic rendering since we fetch from Supabase
@@ -24,13 +32,22 @@ export async function generateMetadata({ params }: Props) {
     }
   }
   
+  const ogImageUrl = post.og_image || `/api/og?title=${encodeURIComponent(post.title)}&description=${encodeURIComponent(post.excerpt || "")}&type=blog`
+  
   return {
     title: `${post.meta_title || post.title} - Magi Sharma`,
     description: post.meta_description || post.excerpt || undefined,
     openGraph: {
       title: post.meta_title || post.title,
       description: post.meta_description || post.excerpt || undefined,
-      images: post.og_image ? [post.og_image] : undefined,
+      images: [{ url: ogImageUrl, width: 1200, height: 630 }],
+      type: "article",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.meta_title || post.title,
+      description: post.meta_description || post.excerpt || undefined,
+      images: [ogImageUrl],
     },
   }
 }
@@ -48,6 +65,7 @@ export default async function BlogPostPage({ params }: Props) {
   return (
     <main className="min-h-screen bg-background">
       <Navigation />
+      <ReadingProgress slug={slug} />
       
       <article className="pt-24 sm:pt-32 pb-16 sm:pb-24 px-4 sm:px-6 md:px-12">
         <div className="max-w-3xl mx-auto">
@@ -84,13 +102,15 @@ export default async function BlogPostPage({ params }: Props) {
                 </time>
               )}
               {read_time && (
-                <span>{read_time} min read</span>
+                <ReadingTimeLeft readTime={read_time} />
               )}
+              <ViewCounter slug={slug} trackView />
+              <ActiveReaders slug={slug} />
             </div>
           </header>
           
           {cover_url && (
-            <div className="mb-12">
+            <div className="mb-8 sm:mb-12">
               {cover_type === "image" && (
                 <img
                   src={cover_url}
@@ -103,6 +123,7 @@ export default async function BlogPostPage({ params }: Props) {
                   src={cover_url}
                   poster={cover_thumbnail || undefined}
                   controls
+                  playsInline
                   className="w-full h-auto"
                 />
               )}
@@ -117,7 +138,22 @@ export default async function BlogPostPage({ params }: Props) {
           )}
           
           <PostContent content={content} />
+          
+          {/* Like button and share */}
+          <div className="mt-12 pt-8 border-t border-border">
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <div className="flex items-center gap-4">
+                <span className="text-sm text-muted-foreground">Did you find this helpful?</span>
+                <LikeButton slug={slug} />
+              </div>
+              <ShareButtons title={title} slug={slug} />
+            </div>
+          </div>
+          
+          <PopularPosts currentSlug={slug} limit={3} />
         </div>
+        
+        <TableOfContents content={content} />
       </article>
 
       <Footer />

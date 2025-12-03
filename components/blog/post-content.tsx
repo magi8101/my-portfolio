@@ -19,7 +19,7 @@ function renderNode(node: JSONContent, index: number): ReactNode {
   switch (node.type) {
     case "paragraph":
       return (
-        <p key={key} className="text-lg leading-relaxed text-foreground mb-6">
+        <p key={key} className="text-base sm:text-lg leading-relaxed text-foreground mb-4 sm:mb-6">
           {node.content?.map((child, i) => renderInline(child, i))}
         </p>
       )
@@ -27,51 +27,61 @@ function renderNode(node: JSONContent, index: number): ReactNode {
     case "heading": {
       const level = (node.attrs?.level || 2) as HeadingLevel
       const headingClasses: Record<HeadingLevel, string> = {
-        1: "text-4xl font-serif mt-12 mb-6",
-        2: "text-3xl font-serif mt-10 mb-4",
-        3: "text-2xl font-serif mt-8 mb-4",
-        4: "text-xl font-serif mt-6 mb-3",
-        5: "text-lg font-serif mt-4 mb-2",
-        6: "text-base font-serif mt-4 mb-2",
+        1: "text-2xl sm:text-3xl md:text-4xl font-serif mt-8 sm:mt-12 mb-4 sm:mb-6",
+        2: "text-xl sm:text-2xl md:text-3xl font-serif mt-6 sm:mt-10 mb-3 sm:mb-4",
+        3: "text-lg sm:text-xl md:text-2xl font-serif mt-5 sm:mt-8 mb-3 sm:mb-4",
+        4: "text-base sm:text-lg md:text-xl font-serif mt-4 sm:mt-6 mb-2 sm:mb-3",
+        5: "text-base sm:text-lg font-serif mt-3 sm:mt-4 mb-2",
+        6: "text-sm sm:text-base font-serif mt-3 sm:mt-4 mb-2",
       }
       const className = headingClasses[level] || headingClasses[2]
       const children = node.content?.map((child, i) => renderInline(child, i))
       
+      // Generate ID for anchor linking
+      const textContent = node.content?.map((child) => {
+        const c = child as { text?: string }
+        return c.text || ""
+      }).join("") || ""
+      const id = textContent
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/(^-|-$)/g, "")
+      
       switch (level) {
         case 1:
-          return <h1 key={key} className={className}>{children}</h1>
+          return <h1 key={key} id={id} className={className}>{children}</h1>
         case 2:
-          return <h2 key={key} className={className}>{children}</h2>
+          return <h2 key={key} id={id} className={className}>{children}</h2>
         case 3:
-          return <h3 key={key} className={className}>{children}</h3>
+          return <h3 key={key} id={id} className={className}>{children}</h3>
         case 4:
-          return <h4 key={key} className={className}>{children}</h4>
+          return <h4 key={key} id={id} className={className}>{children}</h4>
         case 5:
-          return <h5 key={key} className={className}>{children}</h5>
+          return <h5 key={key} id={id} className={className}>{children}</h5>
         case 6:
-          return <h6 key={key} className={className}>{children}</h6>
+          return <h6 key={key} id={id} className={className}>{children}</h6>
         default:
-          return <h2 key={key} className={className}>{children}</h2>
+          return <h2 key={key} id={id} className={className}>{children}</h2>
       }
     }
     
     case "bulletList":
       return (
-        <ul key={key} className="list-disc pl-6 mb-6 space-y-2">
+        <ul key={key} className="list-disc pl-4 sm:pl-6 mb-4 sm:mb-6 space-y-1.5 sm:space-y-2">
           {node.content?.map((item, i) => renderNode(item, i))}
         </ul>
       )
     
     case "orderedList":
       return (
-        <ol key={key} className="list-decimal pl-6 mb-6 space-y-2">
+        <ol key={key} className="list-decimal pl-4 sm:pl-6 mb-4 sm:mb-6 space-y-1.5 sm:space-y-2">
           {node.content?.map((item, i) => renderNode(item, i))}
         </ol>
       )
     
     case "listItem":
       return (
-        <li key={key} className="text-lg leading-relaxed">
+        <li key={key} className="text-base sm:text-lg leading-relaxed">
           {node.content?.map((child, i) => {
             if (child.type === "paragraph") {
               return child.content?.map((inline, j) => renderInline(inline, j))
@@ -83,7 +93,7 @@ function renderNode(node: JSONContent, index: number): ReactNode {
     
     case "blockquote":
       return (
-        <blockquote key={key} className="border-l-2 border-primary pl-6 my-8 italic">
+        <blockquote key={key} className="border-l-2 border-primary pl-4 sm:pl-6 my-6 sm:my-8 italic text-base sm:text-lg">
           {node.content?.map((child, i) => renderNode(child, i))}
         </blockquote>
       )
@@ -98,7 +108,7 @@ function renderNode(node: JSONContent, index: number): ReactNode {
       )
     
     case "horizontalRule":
-      return <hr key={key} className="border-border my-12" />
+      return <hr key={key} className="border-border my-8 sm:my-12" />
     
     case "image":
       return (
@@ -112,7 +122,7 @@ function renderNode(node: JSONContent, index: number): ReactNode {
     
     case "youtube":
       return (
-        <div key={key} className="my-8 aspect-video">
+        <div key={key} className="my-6 sm:my-8 aspect-video">
           <iframe
             src={`https://www.youtube.com/embed/${node.attrs?.src}`}
             title="YouTube video"
@@ -177,7 +187,7 @@ function renderInline(node: JSONContent, index: number): ReactNode {
             break
           case "code":
             content = (
-              <code key={`code-${key}`} className="px-1.5 py-0.5 bg-muted font-mono text-sm">
+              <code key={`code-${key}`} className="px-1 sm:px-1.5 py-0.5 bg-muted font-mono text-xs sm:text-sm break-all">
                 {content}
               </code>
             )

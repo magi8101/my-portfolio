@@ -3,6 +3,7 @@
 import { useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { ThemeToggle } from "./theme-toggle"
 
 const navItems = [
   { name: "Work", href: "#work" },
@@ -32,7 +33,7 @@ export function Navigation() {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-12">
+          <div className="hidden md:flex items-center gap-8">
             {navItems.map((item) => (
               <Link
                 key={item.name}
@@ -42,16 +43,20 @@ export function Navigation() {
                 {item.name}
               </Link>
             ))}
+            <ThemeToggle />
           </div>
 
           {/* Mobile Menu Button */}
-          <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="md:hidden text-white text-sm font-mono uppercase tracking-widest"
-            aria-label="Toggle menu"
-          >
-            {isMobileMenuOpen ? "Close" : "Menu"}
-          </button>
+          <div className="md:hidden flex items-center gap-4">
+            <ThemeToggle />
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="text-white text-sm font-mono uppercase tracking-widest"
+              aria-label="Toggle menu"
+            >
+              {isMobileMenuOpen ? "Close" : "Menu"}
+            </button>
+          </div>
         </nav>
       </header>
 

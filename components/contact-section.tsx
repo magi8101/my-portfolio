@@ -15,7 +15,7 @@ const links = [
 export function ContactSection() {
   const formRef = useRef<HTMLFormElement>(null)
   const [formState, setFormState] = useState({ name: "", email: "", message: "" })
-  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle")
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error" | "rate-limited">("idle")
   const [errorMessage, setErrorMessage] = useState("")
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -24,6 +24,18 @@ export function ContactSection() {
     setErrorMessage("")
 
     try {
+      // Check rate limit first
+      const rateLimitRes = await fetch("/api/rate-limit", { method: "POST" })
+      const rateLimitData = await rateLimitRes.json()
+
+      if (!rateLimitRes.ok || !rateLimitData.allowed) {
+        setStatus("rate-limited")
+        const minutes = Math.ceil((rateLimitData.resetIn || 3600) / 60)
+        setErrorMessage(`Too many messages. Please try again in ${minutes} minutes.`)
+        setTimeout(() => setStatus("idle"), 5000)
+        return
+      }
+
       await emailjs.sendForm(
         process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
         process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!,
@@ -116,7 +128,7 @@ export function ContactSection() {
                 className="w-full bg-transparent border-b border-border py-4 text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors resize-none"
               />
             </div>
-            {status === "error" && (
+            {(status === "error" || status === "rate-limited") && (
               <p className="text-red-500 text-sm">{errorMessage}</p>
             )}
             <button
@@ -124,7 +136,7 @@ export function ContactSection() {
               disabled={status === "sending"}
               className="mt-8 px-8 py-4 border border-foreground text-foreground text-sm font-mono uppercase tracking-widest hover:bg-foreground hover:text-background transition-colors disabled:opacity-50"
             >
-              {status === "sending" ? "Sending..." : status === "sent" ? "Sent!" : status === "error" ? "Try Again" : "Send Message"}
+              {status === "sending" ? "Sending..." : status === "sent" ? "Sent!" : status === "error" || status === "rate-limited" ? "Try Again" : "Send Message"}
             </button>
           </form>
         </div>

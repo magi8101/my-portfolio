@@ -3,6 +3,7 @@ import { getPublishedPosts } from "@/lib/blog"
 import { format } from "date-fns"
 import { Navigation } from "@/components/navigation"
 import { Footer } from "@/components/footer"
+import { BlogSearch } from "@/components/blog/blog-search"
 
 // Dynamic rendering since we fetch from Supabase
 export const dynamic = "force-dynamic"
@@ -34,6 +35,8 @@ export default async function BlogPage() {
             Sharing what I learn as I explore how things work beneath the abstractions.
           </p>
         </div>
+
+        <BlogSearch posts={posts} />
 
         {posts.length === 0 ? (
           <div className="py-24 text-center">

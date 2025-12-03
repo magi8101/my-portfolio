@@ -13,11 +13,11 @@ export function ImageBlock({ src, alt, title }: ImageBlockProps) {
   
   return (
     <>
-      <figure className="my-8">
+      <figure className="my-6 sm:my-8 -mx-4 sm:mx-0">
         <button
           type="button"
           onClick={() => setIsExpanded(true)}
-          className="w-full cursor-zoom-in"
+          className="w-full cursor-zoom-in block relative"
         >
           <img
             src={src}
@@ -27,7 +27,7 @@ export function ImageBlock({ src, alt, title }: ImageBlockProps) {
           />
         </button>
         {title && (
-          <figcaption className="text-sm text-muted-foreground mt-3 text-center">
+          <figcaption className="text-xs sm:text-sm text-muted-foreground mt-2 sm:mt-3 text-center px-4 sm:px-0">
             {title}
           </figcaption>
         )}

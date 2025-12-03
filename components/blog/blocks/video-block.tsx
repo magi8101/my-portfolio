@@ -24,7 +24,7 @@ export function VideoBlock({ src, poster, caption }: VideoBlockProps) {
   }
 
   return (
-    <figure className="my-8">
+    <figure className="my-6 sm:my-8 -mx-4 sm:mx-0">
       <div className="relative group">
         <video
           ref={videoRef}
@@ -48,12 +48,12 @@ export function VideoBlock({ src, poster, caption }: VideoBlockProps) {
             className="absolute inset-0 flex items-center justify-center bg-background/20 group-hover:bg-background/30 transition-colors"
             aria-label="Play video"
           >
-            <div className="w-16 h-16 flex items-center justify-center border-2 border-foreground">
+            <div className="w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center border-2 border-foreground">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
                 fill="currentColor"
-                className="w-6 h-6 ml-1"
+                className="w-5 h-5 sm:w-6 sm:h-6 ml-1"
               >
                 <path d="M8 5v14l11-7z" />
               </svg>
@@ -63,7 +63,7 @@ export function VideoBlock({ src, poster, caption }: VideoBlockProps) {
       </div>
       
       {caption && (
-        <figcaption className="text-sm text-muted-foreground mt-3 text-center">
+        <figcaption className="text-xs sm:text-sm text-muted-foreground mt-2 sm:mt-3 text-center px-4 sm:px-0">
           {caption}
         </figcaption>
       )}
