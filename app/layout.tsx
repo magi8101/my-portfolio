@@ -12,9 +12,6 @@ export const metadata: Metadata = {
   title: "Magi Sharma — Developer",
   description: "Building compilers, systems, and open-source tools.",
   generator: 'my-portfolio',
-  verification: {
-    google: 'pYWswDm6C3bRqSAWn-MJAsSkgwnC01_7mSmJH_RXnBA',
-  },
 }
 
 export default function RootLayout({
@@ -24,6 +21,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${spaceGrotesk.variable} ${playfair.variable} ${ibmPlexMono.variable}`}>
+      <head>
+        {process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION && (
+          <meta
+            name="google-site-verification"
+            content={process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION}
+          />
+        )}
+      </head>
       <body className="font-sans antialiased">
         {children}
         <Analytics />
